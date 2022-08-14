@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/firstFragment">
+
+    <fragment
+        tools:layout="@layout/first_screen"
+        android:id="@+id/firstFragment"
+        android:name="com.example.studio42.ui.FirstFragment"
+        android:label="FirstFragment" >
+        <action
+            android:id="@+id/action_firstFragment_to_secondFragment"
+            app:destination="@id/secondFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/second_screen"
+        android:id="@+id/secondFragment"
+        android:name="com.example.studio42.ui.SecondFragment"
+        android:label="SecondFragment" >
+        <action
+            android:id="@+id/action_secondFragment_to_thirdFragment"
+            app:destination="@id/thirdFragment" />
+        <argument
+            android:name="requestData"
+            app:argType="com.example.studio42.domain.entity.RequestEmployer" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/third_screen"
+        android:id="@+id/thirdFragment"
+        android:name="com.example.studio42.ui.ThirdFragment"
+        android:label="ThirdFragment">
+        <argument
+            android:name="request"
+            app:argType="com.example.studio42.domain.entity.RequestEmployer" />
+        <action
+            android:id="@+id/action_thirdFragment_to_secondFragment"
+            app:destination="@id/secondFragment" />
+    </fragment>
+</navigation>
