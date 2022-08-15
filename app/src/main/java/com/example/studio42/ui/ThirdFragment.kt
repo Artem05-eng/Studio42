@@ -25,6 +25,7 @@ class ThirdFragment : Fragment() {
     private var binding: ThirdScreenBinding? = null
     private val args: ThirdFragmentArgs by navArgs()
     private var data = RequestEmployer("", "", false)
+    private var cacheData = RequestEmployer("", "", false)
     private var emplList: List<EmloyerType> = emptyList()
 
     override fun onAttach(context: Context) {
@@ -45,20 +46,21 @@ class ThirdFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)[ThirdViewModel::class.java]
         viewModel.getEmployerTypes()
-        viewModel.cache.observe(viewLifecycleOwner, {
+        viewModel.cache.observe(viewLifecycleOwner) {
             emplList = it
             binding?.chip1?.text = emplList[0].name
             binding?.chip2?.text = emplList[1].name
             binding?.chip3?.text = emplList[2].name
             binding?.chip4?.text = emplList[3].name
             data = args.request
+            cacheData = data
             if (savedInstanceState != null) {
                 data = savedInstanceState.getParcelable<RequestEmployer>("1")
                     ?: RequestEmployer("", "", false)
             }
             initialization(data)
-        })
-        binding?.topAppBarFilter?.setNavigationOnClickListener {
+        }
+        binding?.applyButton?.setOnClickListener {
             val text = binding?.editableFilter?.text.toString()
             val flag = when (binding?.chipsGroup2?.checkedChipId) {
                 R.id.chip21 -> true
@@ -68,6 +70,9 @@ class ThirdFragment : Fragment() {
             val type = convertListToString(array)
             data = RequestEmployer(text, type, flag)
             findNavController().navigate(ThirdFragmentDirections.actionThirdFragmentToSecondFragment(data))
+        }
+        binding?.topAppBarFilter?.setNavigationOnClickListener {
+            findNavController().navigate(ThirdFragmentDirections.actionThirdFragmentToSecondFragment(cacheData))
         }
         binding?.topAppBarFilter?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
@@ -105,26 +110,10 @@ class ThirdFragment : Fragment() {
         } else {
             binding?.chip22?.isChecked = true
         }
-        if (request.type.contains(emplList[0].id)) {
-            binding?.chip1?.isChecked = true
-        } else {
-            binding?.chip1?.isChecked = false
-        }
-        if (request.type.contains(emplList[1].id)) {
-            binding?.chip2?.isChecked = true
-        } else {
-            binding?.chip2?.isChecked = false
-        }
-        if (request.type.contains(emplList[2].id)) {
-            binding?.chip3?.isChecked = true
-        } else {
-            binding?.chip3?.isChecked = false
-        }
-        if (request.type.contains(emplList[3].id)) {
-            binding?.chip4?.isChecked = true
-        } else {
-            binding?.chip4?.isChecked = false
-        }
+        binding?.chip1?.isChecked = request.type.contains(emplList[0].id)
+        binding?.chip2?.isChecked = request.type.contains(emplList[1].id)
+        binding?.chip3?.isChecked = request.type.contains(emplList[2].id)
+        binding?.chip4?.isChecked = request.type.contains(emplList[3].id)
         binding?.editableFilter?.setText(data.text)
     }
 
