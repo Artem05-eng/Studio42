@@ -47,10 +47,12 @@ class FirstFragment : Fragment() {
             binding?.logo?.alpha = 0.2f
             binding?.retryButton?.isVisible = true
             binding?.progress?.isGone = true
+            binding?.description?.text = "Похоже проблемы \nс сетью"
         })
         binding?.retryButton?.setOnClickListener {
             binding?.logo?.alpha = 1f
             binding?.progress?.isGone = false
+            binding?.description?.text = "Работодатели \n3000"
             it.isVisible = false
             viewModel.getEmploerType()
         }
