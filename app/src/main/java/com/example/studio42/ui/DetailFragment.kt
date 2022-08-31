@@ -55,6 +55,7 @@ class DetailFragment : Fragment() {
             binding?.companyLogo?.isVisible = false
             binding?.topAppBarDetail?.title = "Детальная информация"
             binding?.companyLink?.isVisible = false
+            binding?.retryButtonDetail?.isVisible = true
             Toast.makeText(requireContext(), "Ошибка сети! Попробуйте снова!", Toast.LENGTH_SHORT)
                 .show()
         }
@@ -62,6 +63,7 @@ class DetailFragment : Fragment() {
             binding?.companyTrust?.isVisible = detail.trusted
             binding?.companyLogo?.isVisible = true
             binding?.companyLink?.isVisible = true
+            binding?.retryButtonDetail?.isVisible = false
             binding?.topAppBarDetail?.title = detail.name.uppercase()
             binding?.errorTextDetail?.isVisible = false
             binding?.descriptionCompany?.text = detail.description
@@ -97,6 +99,9 @@ class DetailFragment : Fragment() {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(urlVacancies))
                 startActivity(browserIntent)
             }
+        }
+        binding?.retryButtonDetail?.setOnClickListener {
+            viewModel.getDetail(id)
         }
     }
 

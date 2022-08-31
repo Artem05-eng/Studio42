@@ -81,6 +81,7 @@ class SecondFragment : Fragment() {
             binding?.resultList?.isVisible = (state.refresh != LoadState.Loading) && !error
             binding?.progressList?.isVisible = state.refresh == LoadState.Loading
             binding?.errorTextList?.isVisible = error
+            binding?.retryButtonList?.isVisible = error
         }
         viewModel.error.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "Network error! Try again!", Toast.LENGTH_SHORT).show()
@@ -124,6 +125,9 @@ class SecondFragment : Fragment() {
         }
         viewModel.count.observe(viewLifecycleOwner) {
             binding?.chip?.text = "Найдено ${it} работодателей"
+        }
+        binding?.retryButtonList?.setOnClickListener {
+            viewModel.getEmploers(requestBody)
         }
     }
 

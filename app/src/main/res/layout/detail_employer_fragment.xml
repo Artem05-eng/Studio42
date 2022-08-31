@@ -145,4 +145,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/retryButtonDetail"
+        android:text="Попробовать еще раз"
+        android:textSize="16sp"
+        android:letterSpacing="-0.03"
+        android:textColor="@color/white"
+        android:gravity="center_horizontal|center_vertical"
+        android:backgroundTint="@color/blue_42"
+        android:layout_margin="22dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/errorTextDetail"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
