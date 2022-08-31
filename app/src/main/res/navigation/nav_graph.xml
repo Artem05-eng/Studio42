@@ -41,6 +41,7 @@
             app:destination="@id/secondFragment" />
     </fragment>
     <fragment
+        tools:layout="@layout/detail_employer_fragment"
         android:id="@+id/detailFragment"
         android:name="com.example.studio42.ui.DetailFragment"
         android:label="DetailFragment" >

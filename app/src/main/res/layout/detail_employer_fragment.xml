@@ -37,21 +37,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/companyLogo"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardLogo"
                 android:layout_width="0dp"
-                android:layout_height="200dp"
-                android:layout_margin="16dp"
-                android:scaleType="centerCrop"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                android:elevation="10dp"
+                android:layout_marginHorizontal="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/companyTrust"
-                tools:src="@tools:sample/avatars" />
+                app:layout_constraintBottom_toTopOf="@+id/companyTrust">
+                <ImageView
+                    android:id="@+id/companyLogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="centerCrop"
+                    tools:src="@tools:sample/avatars" />
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/companyTrust"
                 android:text="Проверенный работодатель"
+                android:textStyle="bold"
+                android:textColor="@color/green_42"
                 android:layout_margin="16dp"
                 android:textSize="18sp"
                 android:layout_width="0dp"
@@ -59,16 +68,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/vacancies"
-                app:layout_constraintTop_toBottomOf="@+id/companyLogo"/>
+                app:layout_constraintTop_toBottomOf="@+id/cardLogo"/>
 
             <TextView
                 android:id="@+id/vacancies"
-                tools:text="Открытых вакансий в компании: 0"
+                tools:text="@string/link_vacancies"
                 android:autoLink="web"
                 android:textColor="@color/blue_42"
-                android:textStyle="italic"
+                android:textStyle="italic|bold"
                 android:textSize="18sp"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="16dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@+id/areaInfo"
@@ -80,7 +89,7 @@
                 android:id="@+id/areaInfo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -93,7 +102,7 @@
             <TextView
                 android:id="@+id/descriptionCompany"
                 android:layout_width="0dp"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="16dp"
                 android:textSize="18sp"
                 android:layout_height="wrap_content"
                 tools:text = "О Компании ..."
@@ -108,7 +117,7 @@
                 android:layout_height="wrap_content"
                 tools:text = "Сфера деятельности"
                 app:layout_constraintHorizontal_bias="0"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="16dp"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -119,14 +128,14 @@
                 android:id="@+id/companyLink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="32dp"
+                android:layout_margin="16dp"
                 android:textColor="@color/blue_42"
-                android:textStyle="italic"
+                android:textStyle="italic|bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/industriesInfo"
-                android:text="Сайт работодателя" />
+                android:text="@string/link_company" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
