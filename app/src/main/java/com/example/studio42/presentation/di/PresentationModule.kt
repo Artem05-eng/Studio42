@@ -2,10 +2,7 @@ package com.example.studio42.presentation.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.studio42.presentation.SecondViewModel
-import com.example.studio42.presentation.StartViewModel
-import com.example.studio42.presentation.ThirdViewModel
-import com.example.studio42.presentation.ViewModelFactory
+import com.example.studio42.presentation.*
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -30,6 +27,11 @@ abstract class PresentationModule {
     @IntoMap
     @ViewModelKey(ThirdViewModel::class)
     abstract fun bindsThirdViewModel(viewModel: ThirdViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DetailViewModel::class)
+    abstract fun bindsDetailViewModel(viewModel: DetailViewModel): ViewModel
 
     @Singleton
     @Binds

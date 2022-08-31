@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.example.studio42.domain.entity.Employer
+import com.example.studio42.domain.entity.RequestEmployer
 import com.example.studio42.domain.usecase.DownloadDataUseCase
 import com.example.studio42.util.SingleLiveEvent
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,15 +26,18 @@ class SecondViewModel @Inject constructor(
     val flagFilter: LiveData<Boolean>
         get() = mutableFlagFilter
     private val mutableCount = MutableLiveData<Int>()
+    private val mutablePagingData = MutableLiveData<PagingData<Employer>>()
+    val pagingData : LiveData<PagingData<Employer>>
+        get() = mutablePagingData
     val count : LiveData<Int>
         get() = mutableCount
 
-    fun getEmploers(text: String, type: String?, flag: Boolean) {
+    fun getEmploers(requestEmployer: RequestEmployer) {
         viewModelScope.launch {
             try {
-                val downloadData = downloadUseCase(text, type, flag)!!
-                mutableData.postValue(downloadData.items)
-                mutableCount.postValue(downloadData.found)
+                downloadUseCase(requestEmployer, mutableData, mutableCount).collectLatest { data ->
+                    mutablePagingData.postValue(data)
+                }
             } catch (t: Throwable) {
                 mutableError.postValue(Unit)
             }

@@ -1,4 +1,4 @@
-package com.example.studio42.data.interceptor
+package com.example.studio42.data.datasource.network.interceptor
 
 import okhttp3.Interceptor
 import okhttp3.Request

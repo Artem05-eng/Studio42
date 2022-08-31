@@ -2,9 +2,12 @@ package com.example.studio42.data.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import com.example.studio42.app.App
-import com.example.studio42.data.datasource.EmployerNetworkDataSource
-import com.example.studio42.data.interceptor.CustomInterceptor
+import com.example.studio42.data.datasource.database.EmployerDao
+import com.example.studio42.data.datasource.database.EmployerDatabase
+import com.example.studio42.data.datasource.network.EmployerNetworkDataSource
+import com.example.studio42.data.datasource.network.interceptor.CustomInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -47,4 +50,19 @@ class DataModule {
     @Provides
     fun providesSharedPrefs(app: App): SharedPreferences =
         app.getSharedPreferences(App.SHAREDPREFS_NAME, Context.MODE_PRIVATE)
+
+    @Singleton
+    @Provides
+    fun providesDatabase(app: App): EmployerDatabase {
+        return Room.databaseBuilder(
+            app,
+            EmployerDatabase::class.java,
+            EmployerDatabase.DB_NAME
+        ).build()
+    }
+
+    @Singleton
+    @Provides
+    fun providesPhotoDao(db: EmployerDatabase): EmployerDao = db.employerDao()
+
 }

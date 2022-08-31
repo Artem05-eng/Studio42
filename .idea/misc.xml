@@ -5,9 +5,14 @@
       <map>
         <entry key="..\:/Studio42/app/src/main/res/drawable/filter_light.xml" value="0.1" />
         <entry key="..\:/Studio42/app/src/main/res/drawable/ic_baseline_filter_alt_24.xml" value="0.1" />
+        <entry key="..\:/Studio42/app/src/main/res/drawable/ic_image.xml" value="0.1" />
+        <entry key="..\:/Studio42/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Studio42/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Studio42/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/Studio42/app/src/main/res/layout/card_work.xml" value="0.22826086956521738" />
+        <entry key="..\:/Studio42/app/src/main/res/layout/detail_employer_fragment.xml" value="0.16" />
         <entry key="..\:/Studio42/app/src/main/res/layout/first_screen.xml" value="0.22826086956521738" />
+        <entry key="..\:/Studio42/app/src/main/res/layout/load_state_layout.xml" value="0.1" />
         <entry key="..\:/Studio42/app/src/main/res/layout/second_screen.xml" value="0.176" />
         <entry key="..\:/Studio42/app/src/main/res/layout/third_screen.xml" value="0.1" />
         <entry key="..\:/Studio42/app/src/main/res/menu/top_app_bar_filter.xml" value="0.25416666666666665" />

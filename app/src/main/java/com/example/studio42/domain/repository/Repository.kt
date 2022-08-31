@@ -11,7 +11,7 @@ interface Repository {
 
     suspend fun getEmloyerType(): List<EmloyerType>
 
-    suspend fun getEmployer(text: String, type: String?, flag: Boolean): EmployerFound
+    /*suspend fun getEmployer(text: String, type: String?, flag: Boolean): EmployerFound*/
 
     fun getDataFromShared(): List<EmloyerType>
 

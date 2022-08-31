@@ -10,19 +10,25 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.studio42.R
 import com.example.studio42.databinding.SecondScreenBinding
 import com.example.studio42.domain.entity.EmloyerType
+import com.example.studio42.domain.entity.Employer
 import com.example.studio42.domain.entity.RequestEmployer
 import com.example.studio42.presentation.SecondViewModel
 import com.example.studio42.ui.adapter.EmployerAdapter
+import com.example.studio42.ui.adapter.LoaderStateAdapter
 import com.example.studio42.util.Listener
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SecondFragment : Fragment() {
@@ -60,22 +66,31 @@ class SecondFragment : Fragment() {
             )
         }
         binding?.resultList?.apply {
-            listAdapter = EmployerAdapter()
-            adapter = listAdapter
+            listAdapter = EmployerAdapter{ id -> showDetail(id) }
+            adapter = listAdapter?.withLoadStateHeaderAndFooter(
+                header = LoaderStateAdapter(),
+                footer = LoaderStateAdapter()
+            )
             layoutManager = LinearLayoutManager(requireContext())
         }
-        viewModel.data.observe(viewLifecycleOwner, {
-            listAdapter?.list = it
-        })
-        viewModel.error.observe(viewLifecycleOwner, {
+        listAdapter?.addLoadStateListener { state ->
+            val error =
+                (state.refresh == LoadState.Error(Throwable())) || (state.append == LoadState.Error(
+                    Throwable()
+                ))
+            binding?.resultList?.isVisible = (state.refresh != LoadState.Loading) && !error
+            binding?.progressList?.isVisible = state.refresh == LoadState.Loading
+            binding?.errorTextList?.isVisible = error
+        }
+        viewModel.error.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "Network error! Try again!", Toast.LENGTH_SHORT).show()
-        })
+        }
         binding?.textField?.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
             override fun afterTextChanged(p0: Editable?) {
                 requestBody.text = p0.toString()
-                viewModel.getEmploers(requestBody.text, requestBody.type, requestBody.flag)
+                viewModel.getEmploers(requestBody)
                 if (p0.toString().isNotEmpty()) {
                     viewModel.checkFlag()
                 } else {
@@ -85,12 +100,18 @@ class SecondFragment : Fragment() {
         })
         binding?.chip?.setOnCloseIconClickListener {
             requestBody = RequestEmployer("", "", false)
-            viewModel.getEmploers(requestBody.text, requestBody.type, requestBody.flag)
+            viewModel.getEmploers(requestBody)
             it.isGone = true
             binding?.textField?.editText?.setText("")
             viewModel.uncheckFlag()
         }
-        viewModel.flagFilter.observe(viewLifecycleOwner, { flag ->
+        //update paging data list
+        viewModel.pagingData.observe(viewLifecycleOwner) { pagingData ->
+            lifecycleScope.launch {
+                listAdapter?.submitData(pagingData)
+            }
+        }
+        viewModel.flagFilter.observe(viewLifecycleOwner) { flag ->
             if (flag) {
                 binding?.chip?.isGone = false
                 binding?.filterButton?.setBackgroundColor(resources.getColor(R.color.blue_42))
@@ -100,10 +121,10 @@ class SecondFragment : Fragment() {
                 binding?.filterButton?.setBackgroundColor(resources.getColor(R.color.grey_42))
                 binding?.filterButton?.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_filter_alt_24))
             }
-        })
-        viewModel.count.observe(viewLifecycleOwner, {
+        }
+        viewModel.count.observe(viewLifecycleOwner) {
             binding?.chip?.text = "Найдено ${it} работодателей"
-        })
+        }
     }
 
     override fun onDestroy() {
@@ -120,6 +141,10 @@ class SecondFragment : Fragment() {
             viewModel.uncheckFlag()
         }
         binding?.textField?.editText?.setText(data.text)
-        viewModel.getEmploers(data.text, data.type, data.flag)
+        viewModel.getEmploers(data)
+    }
+
+    private fun showDetail(id: String) {
+        findNavController().navigate(SecondFragmentDirections.actionSecondFragmentToDetailFragment(id))
     }
 }

@@ -1,9 +1,6 @@
 package com.example.studio42.ui.di
 
-import com.example.studio42.ui.FirstFragment
-import com.example.studio42.ui.MainActivity
-import com.example.studio42.ui.SecondFragment
-import com.example.studio42.ui.ThirdFragment
+import com.example.studio42.ui.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -21,4 +18,7 @@ abstract class UIModule {
 
     @ContributesAndroidInjector
     abstract fun bindThirdFragment(): ThirdFragment
+
+    @ContributesAndroidInjector
+    abstract fun bindDetailFragment(): DetailFragment
 }
