@@ -10,4 +10,5 @@
     <color name="grey_42">#F0F0F0</color>
     <color name="light_grey_42">#F0F0F0</color>
     <color name="green_42">#00BB00</color>
+    <color name="background_cards_main">#354253</color>
 </resources>
