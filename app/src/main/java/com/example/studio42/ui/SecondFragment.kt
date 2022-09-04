@@ -28,6 +28,8 @@ import com.example.studio42.ui.adapter.EmployerAdapter
 import com.example.studio42.ui.adapter.LoaderStateAdapter
 import com.example.studio42.util.Listener
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -66,7 +68,7 @@ class SecondFragment : Fragment() {
             )
         }
         binding?.resultList?.apply {
-            listAdapter = EmployerAdapter{ id -> showDetail(id) }
+            listAdapter = EmployerAdapter { id -> showDetail(id) }
             adapter = listAdapter?.withLoadStateHeaderAndFooter(
                 header = LoaderStateAdapter(),
                 footer = LoaderStateAdapter()
@@ -83,15 +85,12 @@ class SecondFragment : Fragment() {
             binding?.errorTextList?.isVisible = error
             binding?.retryButtonList?.isVisible = error
         }
-        viewModel.error.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "Network error! Try again!", Toast.LENGTH_SHORT).show()
-        }
         binding?.textField?.editText?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {
                 requestBody.text = p0.toString()
-                viewModel.getEmploers(requestBody)
+                updateList()
                 if (p0.toString().isNotEmpty()) {
                     viewModel.checkFlag()
                 } else {
@@ -101,16 +100,10 @@ class SecondFragment : Fragment() {
         })
         binding?.chip?.setOnCloseIconClickListener {
             requestBody = RequestEmployer("", "", false)
-            viewModel.getEmploers(requestBody)
+            updateList()
             it.isGone = true
             binding?.textField?.editText?.setText("")
             viewModel.uncheckFlag()
-        }
-        //update paging data list
-        viewModel.pagingData.observe(viewLifecycleOwner) { pagingData ->
-            lifecycleScope.launch {
-                listAdapter?.submitData(pagingData)
-            }
         }
         viewModel.flagFilter.observe(viewLifecycleOwner) { flag ->
             if (flag) {
@@ -127,7 +120,16 @@ class SecondFragment : Fragment() {
             binding?.chip?.text = "Найдено ${it} работодателей"
         }
         binding?.retryButtonList?.setOnClickListener {
-            viewModel.getEmploers(requestBody)
+            updateList()
+        }
+        updateList()
+    }
+
+    private fun updateList() {
+        viewLifecycleOwner.lifecycleScope.launch{
+            viewModel.getEmploers(requestBody).collectLatest { pagingData ->
+                listAdapter?.submitData(pagingData)
+            }
         }
     }
 
@@ -145,10 +147,13 @@ class SecondFragment : Fragment() {
             viewModel.uncheckFlag()
         }
         binding?.textField?.editText?.setText(data.text)
-        viewModel.getEmploers(data)
     }
 
     private fun showDetail(id: String) {
-        findNavController().navigate(SecondFragmentDirections.actionSecondFragmentToDetailFragment(id))
+        findNavController().navigate(
+            SecondFragmentDirections.actionSecondFragmentToDetailFragment(
+                id
+            )
+        )
     }
 }

@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/description"
         android:letterSpacing="-0.01"/>
     <TextView
         android:id="@+id/description"
@@ -32,6 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/retryButton"
         android:gravity="center_horizontal|center_vertical"/>
 
     <Button

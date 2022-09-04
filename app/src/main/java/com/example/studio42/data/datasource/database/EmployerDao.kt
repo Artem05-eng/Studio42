@@ -13,6 +13,7 @@ interface EmployerDao {
     @Query("SELECT * FROM ${EmployerContract.TABLE_NAME_EMPLOYER} WHERE ${EmployerContract.CollumnEmployer.ID} = :id")
     suspend fun selectEmployerById(id: String): Employer
 
+    @Transaction
     @Query("SELECT * FROM ${EmployerContract.TABLE_NAME_EMPLOYER}")
     fun getPagingEmployers(): PagingSource<Int, Employer>
 
@@ -21,4 +22,6 @@ interface EmployerDao {
 
     @Query("DELETE FROM ${EmployerContract.TABLE_NAME_EMPLOYER}")
     suspend fun clearEmployers()
+
+
 }

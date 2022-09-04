@@ -51,6 +51,7 @@ class DetailFragment : Fragment() {
         val id = args.data
         viewModel.getDetail(id)
         viewModel.error.observe(viewLifecycleOwner) {
+            binding?.cardLogo?.isVisible = false
             binding?.errorTextDetail?.isVisible = true
             binding?.companyLogo?.isVisible = false
             binding?.topAppBarDetail?.title = "Детальная информация"
@@ -60,6 +61,7 @@ class DetailFragment : Fragment() {
                 .show()
         }
         viewModel.detail.observe(viewLifecycleOwner) { detail ->
+            binding?.cardLogo?.isVisible = true
             binding?.companyTrust?.isVisible = detail.trusted
             binding?.companyLogo?.isVisible = true
             binding?.companyLink?.isVisible = true

@@ -34,7 +34,6 @@ class DownloadDataUseCase @Inject constructor(
                 count = count,
                 network = network,
                 list = list,
-
                 requestEmployer = requestEmployer
             )
         ) {
