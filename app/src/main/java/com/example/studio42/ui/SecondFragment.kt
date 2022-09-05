@@ -77,11 +77,11 @@ class SecondFragment : Fragment() {
         }
         listAdapter?.addLoadStateListener { state ->
             val error =
-                (state.refresh == LoadState.Error(Throwable())) || (state.append == LoadState.Error(
+                (state.mediator?.refresh == LoadState.Error(Throwable())) || (state.mediator?.append == LoadState.Error(
                     Throwable()
                 ))
-            binding?.resultList?.isVisible = (state.refresh != LoadState.Loading) && !error
-            binding?.progressList?.isVisible = state.refresh == LoadState.Loading
+            binding?.resultList?.isVisible = (state.mediator?.refresh != LoadState.Loading) && !error
+            binding?.progressList?.isVisible = state.mediator?.refresh == LoadState.Loading
             binding?.errorTextList?.isVisible = error
             binding?.retryButtonList?.isVisible = error
         }

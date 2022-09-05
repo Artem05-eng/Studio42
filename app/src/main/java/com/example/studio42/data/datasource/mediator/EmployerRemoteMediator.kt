@@ -58,15 +58,24 @@ class EmployerRemoteMediator(
         try {
             val data = withContext(Dispatchers.IO) {
                 if (requestEmployer.type != "") {
-                    network.getEmloyers(requestEmployer.text, requestEmployer.type, requestEmployer.flag, page = page)
+                    network.getEmloyers(
+                        requestEmployer.text,
+                        requestEmployer.type,
+                        requestEmployer.flag,
+                        page = page
+                    )
                 } else {
-                    network.getEmployersLight(requestEmployer.text, requestEmployer.flag, page = page)
+                    network.getEmployersLight(
+                        requestEmployer.text,
+                        requestEmployer.flag,
+                        page = page
+                    )
                 }
             }
-            val employers = data.items
+            val employers = data?.items
             list.postValue(employers)
-            count.postValue(data.found)
-            val endOfPaginationReached = employers.isEmpty()
+            count.postValue(data?.found)
+            val endOfPaginationReached = employers?.isEmpty()
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     db.employerDao().clearEmployers()
@@ -81,7 +90,7 @@ class EmployerRemoteMediator(
                 db.employerDao().insertEmployers(employersDB)
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-        } catch (e: HttpException) {
+        } catch (e: Throwable) {
             return MediatorResult.Error(e)
         }
     }

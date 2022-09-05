@@ -13,6 +13,7 @@ import com.example.studio42.domain.entity.RequestEmployer
 import com.example.studio42.domain.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

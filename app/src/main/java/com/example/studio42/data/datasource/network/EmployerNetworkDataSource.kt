@@ -13,7 +13,7 @@ interface EmployerNetworkDataSource {
         @Query("text") text: String,
         @Query("type", encoded = true) type: String,
         @Query("only_with_vacancies") only_with_vacancies: Boolean,
-        @Query("per_page") per_page: Number = 100,
+        @Query("per_page") per_page: Number = 10,
         @Query("page") page: Number
     ): EmployerFound
 
