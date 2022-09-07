@@ -1,14 +1,14 @@
 package com.example.studio42.ui
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -20,18 +20,15 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.studio42.R
 import com.example.studio42.databinding.SecondScreenBinding
-import com.example.studio42.domain.entity.EmloyerType
-import com.example.studio42.domain.entity.Employer
 import com.example.studio42.domain.entity.RequestEmployer
 import com.example.studio42.presentation.SecondViewModel
 import com.example.studio42.ui.adapter.EmployerAdapter
 import com.example.studio42.ui.adapter.LoaderStateAdapter
-import com.example.studio42.util.Listener
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 class SecondFragment : Fragment() {
 
@@ -77,11 +74,11 @@ class SecondFragment : Fragment() {
         }
         listAdapter?.addLoadStateListener { state ->
             val error =
-                (state.mediator?.refresh == LoadState.Error(Throwable())) || (state.mediator?.append == LoadState.Error(
+                (state.refresh == LoadState.Error(Throwable())) || (state.append == LoadState.Error(
                     Throwable()
                 ))
-            binding?.resultList?.isVisible = (state.mediator?.refresh != LoadState.Loading) && !error
-            binding?.progressList?.isVisible = state.mediator?.refresh == LoadState.Loading
+            binding?.resultList?.isVisible = (state.refresh != LoadState.Loading) && !error
+            binding?.progressList?.isVisible = state.refresh == LoadState.Loading
             binding?.errorTextList?.isVisible = error
             binding?.retryButtonList?.isVisible = error
         }
@@ -127,10 +124,29 @@ class SecondFragment : Fragment() {
 
     private fun updateList() {
         viewLifecycleOwner.lifecycleScope.launch{
-            viewModel.getEmploers(requestBody).collectLatest { pagingData ->
+            viewModel.getEmploers(requestBody, isOnline()).collectLatest { pagingData ->
                 listAdapter?.submitData(pagingData)
             }
         }
+    }
+
+    fun isOnline(): Boolean {
+        val connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     override fun onDestroy() {

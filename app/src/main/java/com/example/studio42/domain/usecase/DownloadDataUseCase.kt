@@ -35,10 +35,9 @@ class DownloadDataUseCase @Inject constructor(
                 count = count,
                 network = network,
                 list = list,
-                requestEmployer = requestEmployer
-            )
-        ) {
-            db.employerDao().getPagingEmployers()
-        }.flow
+                requestEmployer = requestEmployer,
+            ),
+            pagingSourceFactory = {db.employerDao().getPagingEmployers()}
+        ).flow
     }
 }
